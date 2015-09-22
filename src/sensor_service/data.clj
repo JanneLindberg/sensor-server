@@ -9,13 +9,8 @@
 (defn init-storage []
   (reset! sensor-data {}))
 
-(defn- add-reg-data [pno entry]
-  (if-not (:timestamp entry)
-    (swap! sensor-data conj { pno (merge entry {:timestamp (str (System/currentTimeMillis))})})
-    (swap! sensor-data conj { pno entry })))
-
 (defn put-data [id body]
-  (add-reg-data (keyword id) body))
+  (swap! sensor-data conj { (keyword id) body }))
 
 (defn get-data [id]
   ((keyword id) @sensor-data)
@@ -27,7 +22,7 @@
   (map #(name %) (keys @sensor-data)))
 
 (defn ->vector
-  "Get the sensor data as a vector"
+  "Get all the sensor data as a vector"
   []
   (into [] (map #(get-data %) (get-sensor-ids))))
 
