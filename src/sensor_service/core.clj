@@ -13,7 +13,9 @@
    [ring.middleware.json :refer [wrap-json-response]]
    [clojure.data.json :as json]
    [ring.middleware.reload :as reload]
-   [sensor-service.web :only [handle-websocket send-to-clients]]
+   [sensor-service.web :as web]
+   [sensor-service.web :refer [handle-websocket send-to-clients index-page]]
+
    [sensor-service.data :refer [put-data get-data]]
    )
   )
@@ -60,7 +62,9 @@
 
 
 (defroutes app-routes
-  (GET "/ws" [] sensor-service.web/handle-websocket)
+  (GET "/" []  (web/index-page))
+
+  (GET "/ws" [] web/handle-websocket)
 
   (POST "/data" {body :body} (process-post nil body))
 
@@ -69,8 +73,7 @@
            (GET "/" [] (json-response  200 (sensor-service.data/get-data id)))
            )
 
-  (route/files "/" {:root "public"})
-  (route/resources "/html/")
+  (route/resources "/")
   (route/not-found "Not Found 404")
 )
 
@@ -102,6 +105,7 @@
     (.addShutdownHook (Runtime/getRuntime)
                       (Thread. (fn []
                                  (println "Shutting down...")
+                                 (stop-server)
                                  (shutdown-agents)
                                  )))
     (start-server default-port)))

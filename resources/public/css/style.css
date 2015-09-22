@@ -1,0 +1,9 @@
+div.show_value
+{
+        background-color:#CDDDE7;
+        border-radius:5px;
+        margin:5px 5px 5px 5px;
+        font-size: 12px;
+        width: 250px;
+        padding:1px;
+}

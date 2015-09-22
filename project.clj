@@ -11,6 +11,7 @@
                  [compojure "1.4.0"]
                  [ring/ring-json "0.4.0"]
                  [ring-cors "0.1.7"]
+                 [hiccup "1.0.5"]
                  ]
 
   :profiles {:uberjar {:main sensor-service.core :aot :all}

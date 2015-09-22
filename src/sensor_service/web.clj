@@ -7,7 +7,12 @@
   (:require
    [clojure.data.json :as json]
    [org.httpkit.server :as ws]
-   [sensor-service.data :refer [->vector]]
+   [hiccup.core :as h]
+   [hiccup.page :as page]
+   [hiccup.util :as util]
+   [hiccup.page :refer [html5 include-js include-css]]
+   [sensor-service.data :as data]
+   [sensor-service.data :refer [->vector get-sensor-ids]]
    )
   )
 
@@ -37,3 +42,23 @@
                        (swap! clients dissoc con)
                        (println con "disconnected:" (name status))))))
 
+
+(defn generate-dev-divs [enclosing-div]
+  (let [res (atom enclosing-div)]
+    (doseq [id (data/get-sensor-ids)]
+      (swap! res conj [:div.show_value {:id id} ""]))
+    @res))
+
+
+
+(defn index-page []
+  "Main index page"
+  (page/html5
+   [:head
+    [:title ""]
+    (page/include-css "/css/style.css")
+    (page/include-js "/js/script.js")
+    ]
+   [:body
+    (generate-dev-divs [:div])
+    ]))
