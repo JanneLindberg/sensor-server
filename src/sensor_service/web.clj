@@ -60,5 +60,6 @@
     (page/include-js "/js/script.js")
     ]
    [:body
+    [:div {:id "header"} ""]
     (generate-dev-divs [:div])
     ]))
